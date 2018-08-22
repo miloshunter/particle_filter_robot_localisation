@@ -10,7 +10,7 @@ CRVENA = (255, 0, 0)
 ZUTA = (255, 255, 0)
 
 # game settings
-SIRINA = 1024   # 16 * 64 or 32 * 32 or 64 * 16
+SIRINA = 768   # 16 * 64 or 32 * 32 or 64 * 16
 VISINA = 768  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
 NASLOV = "Lavirint"

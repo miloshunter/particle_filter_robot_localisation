@@ -4,6 +4,7 @@ import pygame as pg
 import sys
 from os import path
 from parametri import *
+from Lavirint import Lavirint
 
 
 class Simulacija:
@@ -12,6 +13,14 @@ class Simulacija:
         self.ekran = pg.display.set_mode((SIRINA, VISINA))
         pg.display.set_caption(NASLOV)
         self.clock = pg.time.Clock()
+        self.nova_simulacija()
+
+    def nova_simulacija(self):
+        self.svi_sprajtovi = pg.sprite.Group()
+        self.lavirint_sprajtovi = pg.sprite.Group()
+
+        lavirint = Lavirint(self)
+
 
     def glavna_petlja(self):
         # Simulira dok se self.simuliraj ne postavi na False
@@ -35,11 +44,14 @@ class Simulacija:
                     self.izadji()
 
     def azuriraj(self):
-        pass
+        self.svi_sprajtovi.update()
+
 
     def crtaj(self):
         # Iscrtavanje sa dvostrukim baferovanjem
         self.ekran.fill(BOJA_POZADINE)
+        for sprajt in self.svi_sprajtovi:
+            self.ekran.blit(sprajt.image, sprajt.rect)
 
         pg.display.flip()
 
