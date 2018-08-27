@@ -5,6 +5,7 @@ import sys
 from os import path
 from parametri import *
 from Lavirint import Lavirint
+from Robot import Robot
 
 
 class Simulacija:
@@ -19,7 +20,9 @@ class Simulacija:
         self.svi_sprajtovi = pg.sprite.Group()
         self.lavirint_sprajtovi = pg.sprite.Group()
 
-        lavirint = Lavirint(self)
+        self.lavirint = Lavirint(self)
+
+        self.robot = Robot(self, 200, 200)
 
 
     def glavna_petlja(self):
@@ -28,8 +31,9 @@ class Simulacija:
         while self.simuliraj:
             self.dt = self.clock.tick(FPS) / 1000.0
             self.dogadjaji()
-            self.azuriraj()
             self.crtaj()
+            self.azuriraj()
+
 
     def izadji(self):
         pg.quit()
@@ -42,6 +46,7 @@ class Simulacija:
             if dogadjaj.type == pg.KEYDOWN:
                 if dogadjaj.key == pg.K_ESCAPE:
                     self.izadji()
+                # self.robot.get_keys()
 
     def azuriraj(self):
         self.svi_sprajtovi.update()
