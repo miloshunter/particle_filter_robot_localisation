@@ -23,7 +23,7 @@ class Robot(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-        self.rot_speed = 5
+        self.rot_speed = 3
         self.vel = vec(0, 0)
         self.pos = vec(x, y)
         self.rot = 45

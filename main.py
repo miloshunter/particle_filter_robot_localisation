@@ -6,6 +6,10 @@ from os import path
 from parametri import *
 from Lavirint import Lavirint
 from Robot import Robot
+import threading
+
+
+
 
 
 class Simulacija:
@@ -19,11 +23,8 @@ class Simulacija:
     def nova_simulacija(self):
         self.svi_sprajtovi = pg.sprite.Group()
         self.lavirint_sprajtovi = pg.sprite.Group()
-
         self.lavirint = Lavirint(self)
-
         self.robot = Robot(self, 200, 200)
-
 
     def glavna_petlja(self):
         # Simulira dok se self.simuliraj ne postavi na False
@@ -34,8 +35,8 @@ class Simulacija:
             self.crtaj()
             self.azuriraj()
 
-
     def izadji(self):
+        self.tajmer_ispisa.cancel()
         pg.quit()
         sys.exit()
 
@@ -46,7 +47,6 @@ class Simulacija:
             if dogadjaj.type == pg.KEYDOWN:
                 if dogadjaj.key == pg.K_ESCAPE:
                     self.izadji()
-                # self.robot.get_keys()
 
     def azuriraj(self):
         self.svi_sprajtovi.update()
@@ -63,6 +63,24 @@ class Simulacija:
 
 simulacija = Simulacija()
 
+
+def printit():
+    tajmer_ispisa = threading.Timer(0.5, printit)
+    simulacija.tajmer_ispisa = tajmer_ispisa
+    tajmer_ispisa.setDaemon(False)
+    tajmer_ispisa.start()
+    print("Robot meri: " + str(simulacija.robot.laser.merenje_lasera))
+
+
+try:
+    printit()
+except (KeyboardInterrupt, SystemExit):
+    sys.exit()
+
+
 simulacija.glavna_petlja()
+
+
+
 
 

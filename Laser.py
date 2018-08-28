@@ -17,6 +17,7 @@ class Laser(pg.sprite.Sprite):
         self.simulacija = robot.simulacija
         self.image = ATOM_IMG
         self.rect = self.image.get_rect()
+        self.merenje_lasera = parametri.DOMET_LASERA
 
     def update(self):
         def rotate(x, y, xo, yo, theta):  # rotate x,y around xo,yo by theta (rad)
@@ -28,7 +29,7 @@ class Laser(pg.sprite.Sprite):
         pozicija1 = copy.deepcopy(self.robot.pos)
 
         pozicija2 = copy.deepcopy(self.robot.pos)
-        pozicija2 += (razdaljina_od_centra*10, 0)
+        pozicija2 += (parametri.DOMET_LASERA, 0)
         pozicija2[0], pozicija2[1] = rotate(pozicija2[0], pozicija2[1],
                                             self.robot.rect.center[0],
                                             self.robot.rect.center[1],
@@ -44,22 +45,50 @@ class Laser(pg.sprite.Sprite):
         ATOM_IMG = pg.Surface((parametri.SIRINA, parametri.VISINA), pg.SRCALPHA)
         self.image = ATOM_IMG
 
-        bottomleft = self.simulacija.lavirint.zidovi[0].rect.bottomleft
-        bottomright = self.simulacija.lavirint.zidovi[0].rect.bottomright
-        topleft = self.simulacija.lavirint.zidovi[0].rect.topleft
-        topright = self.simulacija.lavirint.zidovi[0].rect.topright
+        preseci_sa_zidovima = []
 
-        intersection = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
-                              bottomleft[0], bottomleft[1], bottomright[0], bottomright[1])
+        for zid in self.simulacija.lavirint.zidovi:
+            bottomleft = zid.rect.bottomleft
+            bottomright = zid.rect.bottomright
+            topleft = zid.rect.topleft
+            topright = zid.rect.topright
+
+            presek1 = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
+                                            topleft[0], topleft[1], topright[0], topright[1])
+            if presek1:
+                preseci_sa_zidovima.append(presek1)
+            presek2 = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
+                                            bottomleft[0], bottomleft[1], bottomright[0], bottomright[1])
+            if presek2:
+                preseci_sa_zidovima.append(presek2)
+            presek3 = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
+                                            topleft[0], topleft[1], bottomleft[0], bottomleft[1])
+            if presek3:
+                preseci_sa_zidovima.append(presek3)
+            presek4 = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
+                                            bottomright[0], bottomright[1], topright[0], topright[1])
+            if presek4:
+                preseci_sa_zidovima.append(presek4)
 
         crtaj_do = pozicija2
-        if intersection:
-            pg.draw.circle(self.image, parametri.BELA, (intersection[0],
-                                                          intersection[1]),
-                           3)
-            crtaj_do = intersection
+        razdaljina = 200
+
+        if any(preseci_sa_zidovima):
+            # Nalazenje najblize tacke preseka
+            new_list = [math.sqrt((self.robot.pos[0]-x[0])**2 + (self.robot.pos[1]-x[1])**2) for x in preseci_sa_zidovima]
+
+            mn, idx = min((new_list[i], i) for i in range(len(new_list)))
+
+            presek = preseci_sa_zidovima[idx]
+            razdaljina = mn
+            if presek:
+                pg.draw.circle(self.image, parametri.CRVENA, (presek[0],
+                                                              presek[1]),
+                               3)
+                crtaj_do = presek
 
         pg.draw.line(self.image, parametri.CRVENA, pozicija1, crtaj_do)
+        self.merenje_lasera = int(razdaljina)
 
 
 
