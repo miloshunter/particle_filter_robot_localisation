@@ -43,27 +43,46 @@ class Laser(pg.sprite.Sprite):
 
         ATOM_IMG = pg.Surface((parametri.SIRINA, parametri.VISINA), pg.SRCALPHA)
         self.image = ATOM_IMG
-        pg.draw.line(self.image, parametri.CRVENA, pozicija1, pozicija2)
-        pg.draw.line(self.image, parametri.CRVENA, (500,500), (600,600))
 
-        self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
-                              500, 500, 600, 600)
+        bottomleft = self.simulacija.lavirint.zidovi[0].rect.bottomleft
+        bottomright = self.simulacija.lavirint.zidovi[0].rect.bottomright
+        topleft = self.simulacija.lavirint.zidovi[0].rect.topleft
+        topright = self.simulacija.lavirint.zidovi[0].rect.topright
+
+        intersection = self.measure_distance(pozicija1[0], pozicija1[1], pozicija2[0], pozicija2[1],
+                              bottomleft[0], bottomleft[1], bottomright[0], bottomright[1])
+
+        crtaj_do = pozicija2
+        if intersection:
+            pg.draw.circle(self.image, parametri.BELA, (intersection[0],
+                                                          intersection[1]),
+                           3)
+            crtaj_do = intersection
+
+        pg.draw.line(self.image, parametri.CRVENA, pozicija1, crtaj_do)
+
 
 
     def measure_distance(self, x1, y1, x2, y2, x3, y3, x4, y4):
         def lineLine(x1, y1, x2, y2, x3, y3, x4, y4):
-            #Calculate direction of the lines
-            uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) /\
-                 ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1))
-            uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) /\
-                 ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+            #  Calculate direction of the lines
+            try:
+                uA = ((x4-x3)*(y1-y3) - (y4-y3)*(x1-x3)) /\
+                     ((y4-y3)*(x2-x1) - (x4-x3)*(y2-y1))
+            except ZeroDivisionError:
+                return 0
+            try:
+                uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) /\
+                     ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1))
+            except ZeroDivisionError:
+                return 0
 
-            if (uA >= 0 and uA <=1 and uB >= 0 and uB <=1):
+            if uA >= 0 and uA <=1 and uB >= 0 and uB <=1:
                 intersectionX = int(x1 + (uA * (x2-x1)))
                 intersectionY = int(y1 + (uA * (y2 - y1)))
 
-                pg.draw.circle(self.image, parametri.ZELENA, (intersectionX,
-                                                              intersectionY),
-                               2)
+                return intersectionX, intersectionY
+            else:
+                return None
 
-        lineLine(x1, y1, x2, y2, x3, y3, x4, y4)
+        return lineLine(x1, y1, x2, y2, x3, y3, x4, y4)
