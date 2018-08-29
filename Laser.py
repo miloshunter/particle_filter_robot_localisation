@@ -13,6 +13,7 @@ class Laser(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, robot.simulacija.svi_sprajtovi)
 
         ATOM_IMG = pg.Surface((parametri.SIRINA, parametri.VISINA), pg.SRCALPHA)
+        self.boja_lasera = parametri.CRVENA
         self.robot = robot
         self.simulacija = robot.simulacija
         self.image = ATOM_IMG
@@ -87,7 +88,7 @@ class Laser(pg.sprite.Sprite):
                                3)
                 crtaj_do = presek
 
-        pg.draw.line(self.image, parametri.CRVENA, pozicija1, crtaj_do)
+        pg.draw.line(self.image, self.boja_lasera, pozicija1, crtaj_do)
         self.merenje_lasera = int(razdaljina)
 
 
