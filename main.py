@@ -24,9 +24,9 @@ class Simulacija:
         self.svi_sprajtovi = pg.sprite.Group()
         self.lavirint_sprajtovi = pg.sprite.Group()
         self.lavirint = Lavirint(self)
-        self.robot = Robot(self, 200, 200)
+        self.robot = Robot(self, 150, 150)
         while len(self.partikli) < parametri.BROJ_PARTIKALA:
-            self.kreiraj_partikl((10, 768), (10, 768), (0, 360))
+             self.kreiraj_partikl((10, 768), (10, 768), (0, 360))
 
     def kreiraj_partikl(self, randrange_x, randrange_y, randrange_angle):
         novi_partikl = Partikl(self, random.randrange(max(10, randrange_x[0]), min(768, randrange_x[1])),
@@ -69,10 +69,12 @@ class Simulacija:
         if len(partikli) > 0:
             while len(partikli) < parametri.BROJ_PARTIKALA:
                 indeks = random.randrange(len(partikli))
-
-                self.kreiraj_partikl((int(partikli[indeks].pos[0]-50), int(partikli[indeks].pos[0]+50)),
-                                     (int(partikli[indeks].pos[1] - 50), int(partikli[indeks].pos[1] + 50)),
-                                     (int(partikli[indeks].rot-10), int(partikli[indeks].rot+10)))
+                distx = 100
+                disty = 100
+                rot = 45
+                self.kreiraj_partikl((int(partikli[indeks].pos[0]-distx), int(partikli[indeks].pos[0]+disty)),
+                                     (int(partikli[indeks].pos[1] - distx), int(partikli[indeks].pos[1] + disty)),
+                                     (int(partikli[indeks].rot-rot), int(partikli[indeks].rot+rot)))
         else:
             while len(self.partikli) < parametri.BROJ_PARTIKALA:
                 self.kreiraj_partikl((10, 768), (10, 768), (0, 360))
@@ -87,9 +89,14 @@ class Simulacija:
             if dogadjaj.type == pg.KEYDOWN:
                 if dogadjaj.key == pg.K_SPACE:
                     self.algoritam()
+            if dogadjaj.type == pg.KEYDOWN:
+                if dogadjaj.key == pg.K_p:
+                    for partikl in simulacija.partikli:
+                        partikl.crtaj_partikl = not partikl.crtaj_partikl
 
     def azuriraj(self):
         self.svi_sprajtovi.update()
+
 
 
     def crtaj(self):
@@ -113,9 +120,9 @@ def printit():
 
 
 try:
-    printit()
+  printit()
 except (KeyboardInterrupt, SystemExit):
-    sys.exit()
+   sys.exit()
 
 
 simulacija.glavna_petlja()

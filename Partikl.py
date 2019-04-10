@@ -14,6 +14,7 @@ class Partikl(pg.sprite.Sprite):
     def __init__(self, simulacija, x, y, rot):
         self.grupe = simulacija.svi_sprajtovi
         self.simulacija = simulacija
+        self.crtaj_partikl = True
 
         pg.sprite.Sprite.__init__(self, self.grupe)
 
@@ -44,8 +45,11 @@ class Partikl(pg.sprite.Sprite):
             self.vel = vec(0, 0)
 
         self.rot += self.rot_speed
+        self.vel = self.vel.rotate(self.simulacija.robot.rot)
+        self.vel = self.vel.rotate(-self.rot)
         self.pos += self.vel
         # self.image = pg.transform.rotate(self.original_image, self.rot)
         pg.draw.circle(self.image, parametri.SVETLO_SIVA, (5, 5), 5)
+
         self.rect = self.image.get_rect()
         self.rect.center = self.pos
