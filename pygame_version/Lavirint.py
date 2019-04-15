@@ -1,6 +1,7 @@
 # Sadrzi klasu Lavirint i Zid
 import pygame as pg
-import parametri
+from pygame_version import parametri
+
 
 class Lavirint():
     def __init__(self, simulacija):

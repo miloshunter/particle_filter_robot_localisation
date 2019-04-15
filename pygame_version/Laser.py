@@ -1,7 +1,6 @@
 # Klasa za robota koji ce ici po lavirintu i meriti
 import pygame as pg
-import pygame.gfxdraw
-import parametri
+from pygame_version import parametri
 import copy
 import math
 vec = pg.math.Vector2
@@ -26,7 +25,7 @@ class Laser(pg.sprite.Sprite):
             yr = math.sin(theta) * (x - xo) + math.cos(theta) * (y - yo) + yo
             return [xr, yr]
 
-        razdaljina_od_centra = parametri.DUZINA_ROBOTA/2
+        razdaljina_od_centra = parametri.DUZINA_ROBOTA / 2
         pozicija1 = copy.deepcopy(self.robot.pos)
 
         pozicija2 = copy.deepcopy(self.robot.pos)

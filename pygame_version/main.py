@@ -2,13 +2,12 @@
 
 import pygame as pg
 import sys
-from os import path
 import random
-import parametri
-from Lavirint import Lavirint
-from Robot import Robot
+from pygame_version import parametri
+from pygame_version.Lavirint import Lavirint
+from pygame_version.Robot import Robot
 import threading
-from Partikl import Partikl
+from pygame_version.Partikl import Partikl
 import time
 from joblib import Parallel, delayed
 

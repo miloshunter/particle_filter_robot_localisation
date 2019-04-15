@@ -1,11 +1,7 @@
 # Klasa za robota koji ce ici po lavirintu i meriti
 import pygame as pg
-import pygame.gfxdraw
-import parametri
-import copy
-import math
-import random
-from Laser import Laser
+from pygame_version import parametri
+from pygame_version.Laser import Laser
 vec = pg.math.Vector2
 
 
